@@ -41,6 +41,8 @@ final class LoginPage
     {
         $this->acceptanceTester->seeInField(self::INPUT_LOGIN, '');
         $this->acceptanceTester->seeInField(self::INPUT_PASSWORD, '');
+        
+        $this->assertPasswordIsMasked();
     }
     
     public function fillLogin(string $email): void
@@ -79,5 +81,10 @@ final class LoginPage
     {
         $this->acceptanceTester->fillField($xpath, $value);
         $this->acceptanceTester->seeInField($xpath, $value);
+    }
+    
+    private function assertPasswordIsMasked(): void
+    {
+        $this->acceptanceTester->seeElement(self::INPUT_PASSWORD, ['type' => 'password']);
     }
 }

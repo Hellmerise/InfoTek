@@ -7,7 +7,7 @@ namespace Tests\Support\Page;
 use GuzzleHttp\Handler\Timeout;
 use Tests\Support\AcceptanceTester;
 
-class RestorePasswordPage
+final class RestorePasswordPage
 {
     private const string URL = "/site/restore-password";
     private const string HEADER_FORM_RESTORE_ACCESS = "//div[text() = 'Password recovery'] | //div[text() = 'Восстановление пароля']";
