@@ -6,6 +6,8 @@ namespace Support;
 
 use Codeception\Actor;
 
+use Codeception\Actor;
+
 /**
  * Inherited Methods
  * @method void wantTo($text)

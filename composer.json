@@ -1,4 +1,15 @@
 {
+    "autoload": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Hellmerise",
+            "email": "Hellmerise@gmail.com"
+        }
+    ],
     "require-dev": {
         "codeception/codeception": "^5.3",
         "codeception/module-phpbrowser": "*",
