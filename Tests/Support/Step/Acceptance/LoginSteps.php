@@ -18,8 +18,24 @@ final class LoginSteps extends AcceptanceTester
         $this->loginPage = new LoginPage($I);
     }
     
-    public function login(string $username, string $password): void
+    public function login(string $email, string $password, bool $isEng = false): void
     {
-        $this->loginPage->amOnPage();
+        $this->openEmptyLoginForm($isEng);
+        
+        $this->loginPage->fillLogin($email);
+        $this->loginPage->fillPassword($password);
+        
+        $this->loginPage->clickLoginButton();
+    }
+    
+    private function openEmptyLoginForm(bool $isEng): void
+    {
+        if ($isEng) {
+            $this->loginPage->amOnPageEng();
+        } else {
+            $this->loginPage->amOnPageRu();
+        }
+        
+        $this->loginPage->assertFormIsEmpty();
     }
 }

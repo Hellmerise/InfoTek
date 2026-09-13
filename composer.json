@@ -1,16 +1,19 @@
 {
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "Tests/",
-            "Tests\\Support\\": "Tests/Support/"
-        }
-    },
     "authors": [
         {
             "name": "Hellmerise",
             "email": "Hellmerise@gmail.com"
         }
     ],
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "Tests/",
+            "Tests\\Support\\": "Tests/Support/"
+        }
+    },
+    "scripts": {
+        "run:acceptance": "docker compose run --rm selenium ./vendor/bin/codecept run Acceptance -vvv"
+    },
     "require-dev": {
         "codeception/codeception": "^5.3",
         "codeception/module-phpbrowser": "*",
