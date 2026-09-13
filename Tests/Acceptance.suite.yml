@@ -6,6 +6,7 @@
 actor: AcceptanceTester
 modules:
     enabled:
+        - \Tests\Support\Helper\AuthorizationHelper
         - WebDriver:
             host: %CHROME_CONTAINER_NAME%
             url: %TEST_URL%
@@ -14,6 +15,15 @@ modules:
             capabilities:
                 goog:chromeOptions:
                     args: [ "--incognito" ]
+        - Db:
+            dsn: %DB_DSN%
+            user: %DB_USER%
+            password: %DB_PASSWORD%
+            dump: %DB_DUMP%
+            populate: true
+            cleanup: true
+            reconnect: false
+
 # Add Codeception\Step\Retry trait to AcceptanceTester to enable retries
 step_decorators:
     - Codeception\Step\ConditionalAssertion
