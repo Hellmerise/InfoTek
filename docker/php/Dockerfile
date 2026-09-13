@@ -1,9 +1,16 @@
-ARG PHP_VERSION
+# 1. Объявляем аргументы ДО команды FROM, чтобы они работали в самой FROM
+ARG PHP_VERSION=8.4
+ARG GITHUB_ACCESS_TOKEN
+
+# 2. Используем аргумент в базовом образе
 FROM php:${PHP_VERSION}-cli
 
-LABEL authors="Hellmerise@outlook.com"
+LABEL authors="Hellmerise@gmail.com"
 
-RUN apt-get update && apt-get install -y \
+# 3. ENV объявляем УЖЕ ПОСЛЕ FROM (это правильный синтаксис)
+ENV APT_INSTALL_OPTIONS="-y"
+
+RUN apt-get update && apt-get install ${APT_INSTALL_OPTIONS} \
     git \
     unzip \
     libzip-dev \
@@ -17,6 +24,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# 4. Повторно объявляем ARG после FROM, чтобы он был доступен в команде RUN
 ARG GITHUB_ACCESS_TOKEN
 RUN if [ -n "$GITHUB_ACCESS_TOKEN" ]; then \
         composer config --global --auth github-oauth.github.com ${GITHUB_ACCESS_TOKEN}; \

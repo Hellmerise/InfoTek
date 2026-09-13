@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Acceptance;
+namespace Acceptance;
 
 use Codeception\Scenario;
-use Tests\Support\AcceptanceTester;
-use Tests\Support\Step\Acceptance\LoginSteps;
+use Support\AcceptanceTester;
+use Support\Step\Acceptance\LoginSteps;
 
 final class AuthorizationCest
 {
@@ -20,5 +20,6 @@ final class AuthorizationCest
     {
         $I->wantTo("Проверить отображение ошибок на странице авторизации");
         $this->loginSteps->login("", "");
+        $I->wait(10);
     }
 }

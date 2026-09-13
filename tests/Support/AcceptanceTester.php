@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Support;
+namespace Support;
+
+use Codeception\Actor;
 
 /**
  * Inherited Methods
@@ -19,7 +21,7 @@ namespace Tests\Support;
  *
  * @SuppressWarnings(PHPMD)
 */
-class AcceptanceTester extends \Codeception\Actor
+class AcceptanceTester extends Actor
 {
     use _generated\AcceptanceTesterActions;
 

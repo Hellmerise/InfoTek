@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Support\Page;
+namespace Support\Page;
 
-use Tests\Support\AcceptanceTester;
+use Support\AcceptanceTester;
 
 final class LoginPage
 {

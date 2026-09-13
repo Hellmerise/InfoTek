@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Support\Step\Acceptance;
+namespace Support\Step\Acceptance;
 
 use Codeception\Scenario;
-use Tests\Support\AcceptanceTester;
-use Tests\Support\Page\LoginPage;
+use Support\AcceptanceTester;
+use Support\Page\LoginPage;
 
 final class LoginSteps extends AcceptanceTester
 {
