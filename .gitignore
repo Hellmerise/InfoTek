@@ -1,0 +1,12 @@
+.env
+
+# Composer
+vendor/
+composer.lock
+
+# IDE
+.idea/
+
+# Codeception
+Tests/_output/
+Tests/Support/_generated/
