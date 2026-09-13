@@ -6,8 +6,14 @@
 actor: AcceptanceTester
 modules:
     enabled:
-        - PhpBrowser:
-            url: http://localhost/myapp
+        - WebDriver:
+            host: %CHROME_CONTAINER_NAME%
+            url: %BASE_URL%
+            browser: chrome
+            window_size: maximize
+            capabilities:
+                goog:chromeOptions:
+                    args: [ "--incognito" ]
 # Add Codeception\Step\Retry trait to AcceptanceTester to enable retries
 step_decorators:
     - Codeception\Step\ConditionalAssertion

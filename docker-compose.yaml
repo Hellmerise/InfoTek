@@ -1,0 +1,36 @@
+networks:
+  web:
+    external: true
+
+services:
+  selenium-app:
+    container_name: ${SELENIUM_CONTAINER_NAME}
+    hostname: selenium
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION}
+        GITHUB_ACCESS_TOKEN: ${GITHUB_ACCESS_TOKEN}
+    volumes:
+      - ./:/var/www/src
+    working_dir: /var/www/src
+    networks:
+      - web
+    privileged: true
+    shm_size: 4g
+
+  chrome:
+    image: selenium/standalone-chrome:latest
+    container_name: ${CHROME_CONTAINER_NAME}
+    hostname: chrome
+    environment:
+      VNC_NO_PASSWORD: 1
+      SE_CHROME_ARGS: >
+        --incognito
+    networks:
+      - web
+    ports:
+      - "4444:4444"
+    privileged: true
+    shm_size: 2g
