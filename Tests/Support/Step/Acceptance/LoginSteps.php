@@ -7,15 +7,18 @@ namespace Tests\Support\Step\Acceptance;
 use Codeception\Scenario;
 use Tests\Support\AcceptanceTester;
 use Tests\Support\Page\LoginPage;
+use Tests\Support\Page\RestorePasswordPage;
 
 final class LoginSteps extends AcceptanceTester
 {
     private LoginPage $loginPage;
+    private RestorePasswordPage $restorePasswordPage;
     
     public function __construct(Scenario $scenario, AcceptanceTester $I)
     {
         parent::__construct($scenario);
         $this->loginPage = new LoginPage($I);
+        $this->restorePasswordPage = new RestorePasswordPage($I);
     }
     
     public function login(string $email, string $password, bool $isEng = false): void
@@ -26,6 +29,14 @@ final class LoginSteps extends AcceptanceTester
         $this->loginPage->fillPassword($password);
         
         $this->loginPage->clickLoginButton();
+    }
+    
+    public function openRestorePasswordForm(bool $isEng, int $timeout): void
+    {
+        $this->openEmptyLoginForm($isEng);
+        
+        $this->loginPage->clickRestorePasswordButton();
+        $this->restorePasswordPage->seeRestorePasswordPage($timeout);
     }
     
     private function openEmptyLoginForm(bool $isEng): void
