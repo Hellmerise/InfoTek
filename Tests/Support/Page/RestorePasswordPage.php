@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Support\Page;
 
-use GuzzleHttp\Handler\Timeout;
 use Tests\Support\AcceptanceTester;
 
 final class RestorePasswordPage
