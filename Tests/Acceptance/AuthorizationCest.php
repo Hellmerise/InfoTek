@@ -22,6 +22,18 @@ final class AuthorizationCest
         $this->loginSteps = new LoginSteps($scenario, $I);
     }
     
+    public function checkUserWasCreated(AcceptanceTester $I): void
+    {
+        $I->wantTo('Проверить наличие тестового пользователя');
+        
+        $I->haveTestUser();
+        
+        $tableName = $I->getTableNameUsers();
+        $testUser = $I->getTestUser();
+        
+        $I->seeInDatabase($tableName, ['email' => $testUser['email']]);
+    }
+    
     /**
      * @dataProvider dataProvider
      */
