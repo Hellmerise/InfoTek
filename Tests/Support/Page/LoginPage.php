@@ -58,6 +58,11 @@ final class LoginPage
         $this->acceptanceTester->click(self::BUTTON_LOGIN);
     }
     
+    public function clickRestorePasswordButton(): void
+    {
+        $this->acceptanceTester->click(self::LINK_RESTORE_ACCESS);
+    }
+    
     private function amOnPage(bool $isEng = false): void
     {
         $this->acceptanceTester->amOnPage(self::URL);
