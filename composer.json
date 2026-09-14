@@ -13,7 +13,8 @@
     },
     "scripts": {
         "run:acceptance": "docker compose run --rm selenium ./vendor/bin/codecept run Acceptance -vvv",
-        "run:api": "docker compose run --rm selenium ./vendor/bin/codecept run Api -vvv"
+        "run:api": "docker compose run --rm selenium ./vendor/bin/codecept run Api -vvv",
+        "run:all": "docker compose run --rm selenium ./vendor/bin/codecept run -vvv"
     },
     "require-dev": {
         "codeception/codeception": "^5.3",

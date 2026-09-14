@@ -4,91 +4,70 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
+use Codeception\Example;
+use Codeception\Scenario;
 use Tests\Support\ApiTester;
+use Tests\Support\Step\Api\RegisterSteps;
 
 final class RegisterCest
 {
-    public function _before(ApiTester $I): void
-    {
+    private RegisterSteps $registerSteps;
     
+    public function _before(Scenario $scenario): void
+    {
+        $this->registerSteps = new RegisterSteps($scenario);
     }
     
     public function registerNewUser(ApiTester $I): void
     {
         $I->wantTo('Успешная регистрация нового пользователя');
         
-        $username = $this->uniqueEmail('hercules');
+        $email = $this->registerSteps->generateUniqueEmail('testUser');
         
-        $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->haveHttpHeader('Accept', 'application/json');
-        
-        $I->sendPost('/register', [
-            'username' => $username,
-            'password' => 'secure_pass',
-        ]);
-        
-        $I->seeResponseCodeIs(201);
-        $I->seeResponseIsJson();
-        $I->seeResponseContainsJson(['message' => 'Регистрация успешна']);
-        $I->seeResponseMatchesJsonType(['message' => 'string']);
+        $this->registerSteps->register($email, 'test123');
+        $this->registerSteps->seeSuccessfulRegistration();
     }
     
     public function registerDuplicateUsername(ApiTester $I): void
     {
-        $I->wantTo('Ошибка при регистрации с уже существующим username');
+        $I->wantTo('Ошибка при повторной регистрации с тем же email');
         
-        $username = $this->uniqueEmail('duplicate');
+        $email = $this->registerSteps->generateUniqueEmail('duplicate');
         
-        $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->haveHttpHeader('Accept', 'application/json');
+        $this->registerSteps->register($email, 'test123');
+        $this->registerSteps->seeSuccessfulRegistration();
         
-        $I->sendPost('/register', ['username' => $username, 'password' => 'secure_pass']);
-        $I->seeResponseCodeIs(201);
-        
-        $I->sendPost('/register', ['username' => $username, 'password' => 'another_pass']);
-        
-        $I->seeResponseCodeIs(400);
-        $I->seeResponseIsJson();
-        $I->seeResponseJsonMatchesJsonPath('$.error');
+        $this->registerSteps->register($email, '123test');
+        $this->registerSteps->seeValidationError();
     }
     
-    public function registerWithEmptyFields(ApiTester $I): void
+    /**
+     * @dataProvider dataProvider
+     */
+    public function registerWithInvalidData(ApiTester $I, Example $example): void
     {
-        $I->wantTo('Ошибка при регистрации с пустыми полями');
+        $I->wantTo($example['testName']);
         
-        $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->haveHttpHeader('Accept', 'application/json');
-        
-        $I->sendPost('/register', ['username' => '', 'password' => '']);
-        
-        $I->seeResponseCodeIs(400);
-        $I->seeResponseIsJson();
-        $I->seeResponseJsonMatchesJsonPath('$.error');
+        $this->registerSteps->register($example['username'], $example['password']);
+        $this->registerSteps->seeValidationError();
     }
     
     public function registerAndLogin(ApiTester $I): void
     {
         $I->wantTo('Регистрация и последующий вход с теми же данными');
         
-        $username = $this->uniqueEmail('login_test');
-        $password = 'secure_pass';
+        $email    = $this->registerSteps->generateUniqueEmail('login_test');
+        $password = 'test123';
         
-        $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->haveHttpHeader('Accept', 'application/json');
+        $this->registerSteps->register($email, $password);
+        $this->registerSteps->seeSuccessfulRegistration();
         
-        $I->sendPost('/register', ['username' => $username, 'password' => $password]);
-        $I->seeResponseCodeIs(201);
-        
-        $I->sendPost('/login', ['username' => $username, 'password' => $password]);
-        
-        $I->seeResponseCodeIs(200);
-        $I->seeResponseIsJson();
-        $I->seeResponseMatchesJsonType(['token' => 'string']);
-        $I->seeResponseJsonMatchesJsonPath('$.token');
+        $this->registerSteps->login($email, $password);
+        $this->registerSteps->seeAuthToken();
     }
-    
-    private function uniqueEmail(string $prefix = 'user'): string
+
+    private function dataProvider(): array
     {
-        return sprintf('%s_%s@mail.ru', $prefix, bin2hex(random_bytes(4)));
+        return require dirname(__DIR__) . '/Support/Data/Api/RegisterData.php';
     }
 }
