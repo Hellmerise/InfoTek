@@ -1,0 +1,1912 @@
+<html>
+ <head>
+	<title>Test results</title>
+	<meta charset='utf-8'>
+	<link href='https://fonts.googleapis.com/css?family=Varela+Round&v2' rel='stylesheet' type='text/css'>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+	 <style>
+		 .layout {
+		 margin: 0 auto;
+		 max-width: 1000px;
+
+		 }
+		 body { font-family: arial, serif; margin: 0; padding: 0; background: #ecf0f1; font-size: 20px; }
+		 h1,h2,h3 { font-family: arial, serif; color: #7f8c8d; }
+		 h1 { font-size: 2.5em; }
+		 h2 { font-size: 1.3em; }
+         h3 { font-size: 1em; color: #84BBDD; margin: 0.5em 0; }
+
+		 table { border: none; margin: 0; padding: 0; font-size: 0.9em;}
+		 .scenarioStepsTable .stepName { padding: 5px; }
+
+		 .scenarioStepsTable td {
+            background: #fff;
+		 }
+
+         .quiet {
+             color: #333;
+             font-size: 0.8em;
+         }
+
+         .screenshot {
+             max-height: 400px;
+             overflow-y: scroll;
+             display: block;
+         }
+         .screenshot img {
+             zoom: 0.5;
+         }
+
+         @media (max-width: 1200px) {
+           #toolbar-filter {
+             display: none !important;
+           }
+         }
+
+         .scenarioStepsTable .nostyle {
+             background: none;
+             border: none;
+         }
+
+		 p {
+		    cursor: pointer;
+		 }
+
+         .scenarioRow>td>p {
+             padding: 5px;
+         }
+
+         .scenarioStepsTable .failedStep {
+             padding: 10px;
+             background: #ecf0f1;
+             border: 2px solid #e74c3c;
+             border-radius: 0px;
+             color:  #e74c3c;
+         }
+
+         .scenarioStepsTable .error {
+             background:  #999;
+             padding: 10px;
+             color: #fff;
+             border-radius: 0px;
+         }
+
+         .scenarioStepsTable .error a {
+             color: #eef;
+         }
+
+         .scenarioStepsTable.substeps td {
+             background: #bdc3c7;
+         }
+
+		 .header { font-size: large; font-weight: bold; }
+		 p.scenarioSuccess {
+    		 background: rgb(157,213,58); /* Old browsers */
+		 }
+
+
+		 .scenario { color: black; }
+		 p.scenarioFailed, p.scenarioError { color: black;
+		   background: #e74c3c
+		 }
+
+		 table.scenarioFailed tr:last-child { font-weight: bold; }
+
+		 td.scenarioSuccess { color: green }
+		 td.scenarioFailed { color: red }
+		 .scenarioSkipped { color: teal; }
+		 .scenarioIncomplete { color: gray; }
+		 .scenarioUseless { color: orange; }
+		 .scenarioStepsTable { margin-left: 10px; display: none; color: #333; }
+
+		 #stepContainerSummary {
+		 background: white;
+		 -webkit-border-radius: 5px;
+		 -moz-border-radius: 5px;
+		 border-radius: 5px;
+		 padding: 20px;
+		 }
+
+         .toggle {
+             background: rgba(255,255,255,0.5);
+             border-radius: 10px;
+             display: inline-block;
+             width: 20px;
+             height: 20px;
+             text-align: center;
+             margin: auto;
+             color: #666
+         }
+
+		 ul#toolbar-filter {
+            display: block;
+            position: fixed;
+            top: 20px;
+            left: 0px;
+            padding: 0px;
+		 }
+		 ul#toolbar-filter li {
+		    list-style: none;
+		    text-align: center;
+			padding: 20px;
+			background-color: #3498db;
+		 }
+		 ul#toolbar-filter li a, ul#toolbar-filter li a:hover, ul#toolbar-filter li a:visited {
+		    color: #34495e;
+		    text-decoration: none;
+		 }
+		 ul#toolbar-filter li.disabled {
+			background-color: #bdc3c7;
+		 }
+	 </style>
+
+  <script type="text/javascript">
+  var showAll = true;
+  function showHide(nodeId, linkObj)
+  {
+    var subObj = document.getElementById('stepContainer' + nodeId);
+    var toggle = linkObj.childNodes[0];
+    if (toggle.innerHTML != '-') {
+      toggle.innerHTML = '-';
+      subObj.style.display='block';
+      subObj.style.width = '100%';
+    } else {
+      toggle.innerHTML = '+';
+      subObj.style.display='none';
+    }
+  }
+
+  function showAllScenarios() {
+    var toolbar = document.getElementById('toolbar-filter');
+    for (var i = 0; i < toolbar.children.length; i++) {
+      toolbar.children[i].className = '';
+    }
+
+    var trs = document.getElementsByTagName('tr');
+    for(var z = 0; z < trs.length; z++) {
+      trs[z].style.display = '';
+    }
+    showAll = true;
+  }
+
+  function toggleScenarios(name, linkObj) {
+    var links = document.getElementById('toolbar-filter').children;
+    var rows = document.getElementsByClassName('scenarioRow');
+    if (showAll) {
+        for (var i = 0; i < links.length; i++) {
+            links[i].className = 'disabled';
+        }
+
+        for (var i = 0; i < rows.length; i++) {
+            rows[i].style.display = 'none';
+        }
+
+    }
+    showAll = false;
+
+    if (linkObj.className == '') {
+        linkObj.className = 'disabled';
+        for (var i = 0; i < rows.length; i++) {
+          if (rows[i].classList.contains(name)) {
+                rows[i].style.display = 'none';
+          }
+        }
+        return;
+    }
+    if (linkObj.className == 'disabled') {
+        linkObj.className = '';
+        for (var i = 0; i < rows.length; i++) {
+          if (rows[i].classList.contains(name)) {
+                rows[i].style.display = 'table-row';
+          }
+        }
+        return;
+    }
+
+  }
+  </script>
+ </head>
+
+ <body>
+   <ul id="toolbar-filter">
+     <li> <a href="#" title="Show all" onClick="showAllScenarios()">◯</a></li>
+     <li> <a href="#" title="Successful" onClick="toggleScenarios('scenarioSuccess', this.parentElement)"><strong>✔</strong> 19</a></li>
+     <li> <a href="#" title="Failed" onClick="toggleScenarios('scenarioFailed', this.parentElement)"><strong>✗</strong> 0</a></li>
+     <li> <a href="#" title="Skipped" onClick="toggleScenarios('scenarioSkipped', this.parentElement)"><strong>S</strong> 0</a></li>
+     <li> <a href="#" title="Incomplete" onClick="toggleScenarios('scenarioIncomplete', this.parentElement)"><strong>I</strong> 0</a></li>
+     <li> <a href="#" title="Useless" onClick="toggleScenarios('scenarioUseless', this.parentElement)"><strong>U</strong> 0</a></li>
+   </ul>
+ <div class="layout">
+ <h1>Codeception Results <small><span style="color: green">OK</span> (01:25.078)</small></h1>
+
+
+
+	 <table border="0" style="width: 100%;">
+		<tr>
+ <td>
+     <h3>Tests.Acceptance Tests</h3>
+ </td>
+</tr>   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('1', this)"><span class="toggle">+</span>
+          <span class="quiet">AuthorizationCest &raquo;</span> Проверить наличие тестового пользователя <span style="color: #34495e; font-size: 70%;">0.09s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer1">
+
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have test user</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I get table name users</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I get test user</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in database <span style="color: #732E81">&quot;users&quot;,{&quot;email&quot;:&quot;dmitriy@sveshnikov.ru&quot;}</span></td>
+      </tr>
+
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('2', this)"><span class="toggle">+</span>
+          <span class="quiet">AuthorizationCest &raquo;</span> Negative authorization ru | [&quot;Tests\\Support\\Constants...],&quot;&quot;,&quot;&quot;,[&quot;Tests\\Support\\Constants...],&quot;Почта и пароль не заполнены&quot; <span style="color: #34495e; font-size: 70%;">6.17s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer2">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd3c9b61b', this)"><span class="toggle">+</span> Acceptance\AuthorizationCest: negative scenario cest <span style="color: #732E81">&quot;Tests\\Support\\AcceptanceTester&quot;,&quot;Codeception\\Example&quot;,&quot;Tests\\Support\\Constants\\LanguageType&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd3c9b61b">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I am on page <span style="color: #732E81">&quot;/login&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=ru_RU&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see element <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,{&quot;type&quot;:&quot;password&quot;}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::button[text() = &#039;Войти&#039;] | //child::button[text() = &#039;Sign In&#039;]&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element <span style="color: #732E81">&quot;//p[text() = &quot;Необходимо заполнить «Электронная почта».&quot;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element <span style="color: #732E81">&quot;//p[text() = &quot;Необходимо заполнить «Пароль».&quot;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Некорректный email&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Некорректный email / пароль&quot;]&quot;</span></td>
+      </tr>
+
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('3', this)"><span class="toggle">+</span>
+          <span class="quiet">AuthorizationCest &raquo;</span> Negative authorization ru | [&quot;Tests\\Support\\Cons...],&quot;test@mail.ru&quot;,&quot;&quot;,[&quot;Tests\\Support\\Cons...],&quot;Почта заполнена корре...&quot; <span style="color: #34495e; font-size: 70%;">5.05s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer3">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd41ea352', this)"><span class="toggle">+</span> Acceptance\AuthorizationCest: negative scenario cest <span style="color: #732E81">&quot;Tests\\Support\\AcceptanceTester&quot;,&quot;Codeception\\Example&quot;,&quot;Tests\\Support\\Constants\\LanguageType&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd41ea352">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I am on page <span style="color: #732E81">&quot;/login&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=ru_RU&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see element <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,{&quot;type&quot;:&quot;password&quot;}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;test@mail.ru&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;test@mail.ru&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::button[text() = &#039;Войти&#039;] | //child::button[text() = &#039;Sign In&#039;]&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element <span style="color: #732E81">&quot;//p[text() = &quot;Необходимо заполнить «Пароль».&quot;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Некорректный email&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Необходимо заполнить «Электронная почта».&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Некорректный email / пароль&quot;]&quot;</span></td>
+      </tr>
+
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('4', this)"><span class="toggle">+</span>
+          <span class="quiet">AuthorizationCest &raquo;</span> Negative authorization ru | [&quot;Tests\\Support\\Consta...],&quot;&quot;,&quot;123456&quot;,[&quot;Tests\\Support\\Consta...],&quot;Почта пустая, а пароль ...&quot; <span style="color: #34495e; font-size: 70%;">5.37s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer4">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd478f126', this)"><span class="toggle">+</span> Acceptance\AuthorizationCest: negative scenario cest <span style="color: #732E81">&quot;Tests\\Support\\AcceptanceTester&quot;,&quot;Codeception\\Example&quot;,&quot;Tests\\Support\\Constants\\LanguageType&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd478f126">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I am on page <span style="color: #732E81">&quot;/login&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=ru_RU&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see element <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,{&quot;type&quot;:&quot;password&quot;}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;123456&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;123456&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::button[text() = &#039;Войти&#039;] | //child::button[text() = &#039;Sign In&#039;]&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element <span style="color: #732E81">&quot;//p[text() = &quot;Необходимо заполнить «Электронная почта».&quot;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Некорректный email&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Некорректный email / пароль&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Необходимо заполнить «Пароль».&quot;]&quot;</span></td>
+      </tr>
+
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('5', this)"><span class="toggle">+</span>
+          <span class="quiet">AuthorizationCest &raquo;</span> Negative authorization ru | [&quot;Tests\\Support\\Const...],&quot;test&quot;,&quot;123456&quot;,[&quot;Tests\\Support\\Const...],&quot;Почта заполнена некорр...&quot; <span style="color: #34495e; font-size: 70%;">5.18s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer5">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd4d10c0b', this)"><span class="toggle">+</span> Acceptance\AuthorizationCest: negative scenario cest <span style="color: #732E81">&quot;Tests\\Support\\AcceptanceTester&quot;,&quot;Codeception\\Example&quot;,&quot;Tests\\Support\\Constants\\LanguageType&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd4d10c0b">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I am on page <span style="color: #732E81">&quot;/login&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=ru_RU&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see element <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,{&quot;type&quot;:&quot;password&quot;}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;test&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;test&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;123456&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;123456&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::button[text() = &#039;Войти&#039;] | //child::button[text() = &#039;Sign In&#039;]&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element <span style="color: #732E81">&quot;//p[text() = &quot;Некорректный email&quot;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Необходимо заполнить «Электронная почта».&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Некорректный email / пароль&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Необходимо заполнить «Пароль».&quot;]&quot;</span></td>
+      </tr>
+
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('6', this)"><span class="toggle">+</span>
+          <span class="quiet">AuthorizationCest &raquo;</span> Negative authorization ru | [&quot;Tests\\Support\\Co...],&quot;test@mail.ru&quot;,&quot;123456&quot;,[&quot;Tests\\Support\\Co...],&quot;Некорректная пара л...&quot; <span style="color: #34495e; font-size: 70%;">8.34s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer6">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd55a0530', this)"><span class="toggle">+</span> Acceptance\AuthorizationCest: negative scenario cest <span style="color: #732E81">&quot;Tests\\Support\\AcceptanceTester&quot;,&quot;Codeception\\Example&quot;,&quot;Tests\\Support\\Constants\\LanguageType&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd55a0530">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I am on page <span style="color: #732E81">&quot;/login&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=ru_RU&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see element <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,{&quot;type&quot;:&quot;password&quot;}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;test@mail.ru&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;test@mail.ru&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;123456&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;123456&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::button[text() = &#039;Войти&#039;] | //child::button[text() = &#039;Sign In&#039;]&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element <span style="color: #732E81">&quot;//p[text() = &quot;Некорректный email / пароль&quot;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Необходимо заполнить «Электронная почта».&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Необходимо заполнить «Пароль».&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Некорректный email&quot;]&quot;</span></td>
+      </tr>
+
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('7', this)"><span class="toggle">+</span>
+          <span class="quiet">AuthorizationCest &raquo;</span> Negative authorization en | [&quot;Tests\\Support\\Constants...],&quot;&quot;,&quot;&quot;,[&quot;Tests\\Support\\Constants...],&quot;Почта и пароль не заполнены&quot; <span style="color: #34495e; font-size: 70%;">5.23s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer7">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd5b20d28', this)"><span class="toggle">+</span> Acceptance\AuthorizationCest: negative scenario cest <span style="color: #732E81">&quot;Tests\\Support\\AcceptanceTester&quot;,&quot;Codeception\\Example&quot;,&quot;Tests\\Support\\Constants\\LanguageType&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd5b20d28">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I am on page <span style="color: #732E81">&quot;/login&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see element <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,{&quot;type&quot;:&quot;password&quot;}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::button[text() = &#039;Войти&#039;] | //child::button[text() = &#039;Sign In&#039;]&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element <span style="color: #732E81">&quot;//p[text() = &quot;Email cannot be blank.&quot;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element <span style="color: #732E81">&quot;//p[text() = &quot;Password cannot be blank.&quot;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Invalid email&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Incorrect email / password&quot;]&quot;</span></td>
+      </tr>
+
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('8', this)"><span class="toggle">+</span>
+          <span class="quiet">AuthorizationCest &raquo;</span> Negative authorization en | [&quot;Tests\\Support\\Cons...],&quot;test@mail.ru&quot;,&quot;&quot;,[&quot;Tests\\Support\\Cons...],&quot;Почта заполнена корре...&quot; <span style="color: #34495e; font-size: 70%;">5.04s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer8">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd6064e60', this)"><span class="toggle">+</span> Acceptance\AuthorizationCest: negative scenario cest <span style="color: #732E81">&quot;Tests\\Support\\AcceptanceTester&quot;,&quot;Codeception\\Example&quot;,&quot;Tests\\Support\\Constants\\LanguageType&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd6064e60">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I am on page <span style="color: #732E81">&quot;/login&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see element <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,{&quot;type&quot;:&quot;password&quot;}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;test@mail.ru&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;test@mail.ru&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::button[text() = &#039;Войти&#039;] | //child::button[text() = &#039;Sign In&#039;]&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element <span style="color: #732E81">&quot;//p[text() = &quot;Password cannot be blank.&quot;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Invalid email&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Email cannot be blank.&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Incorrect email / password&quot;]&quot;</span></td>
+      </tr>
+
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('9', this)"><span class="toggle">+</span>
+          <span class="quiet">AuthorizationCest &raquo;</span> Negative authorization en | [&quot;Tests\\Support\\Consta...],&quot;&quot;,&quot;123456&quot;,[&quot;Tests\\Support\\Consta...],&quot;Почта пустая, а пароль ...&quot; <span style="color: #34495e; font-size: 70%;">5.67s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer9">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd6650595', this)"><span class="toggle">+</span> Acceptance\AuthorizationCest: negative scenario cest <span style="color: #732E81">&quot;Tests\\Support\\AcceptanceTester&quot;,&quot;Codeception\\Example&quot;,&quot;Tests\\Support\\Constants\\LanguageType&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd6650595">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I am on page <span style="color: #732E81">&quot;/login&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see element <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,{&quot;type&quot;:&quot;password&quot;}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;123456&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;123456&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::button[text() = &#039;Войти&#039;] | //child::button[text() = &#039;Sign In&#039;]&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element <span style="color: #732E81">&quot;//p[text() = &quot;Email cannot be blank.&quot;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Invalid email&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Incorrect email / password&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Password cannot be blank.&quot;]&quot;</span></td>
+      </tr>
+
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('10', this)"><span class="toggle">+</span>
+          <span class="quiet">AuthorizationCest &raquo;</span> Negative authorization en | [&quot;Tests\\Support\\Const...],&quot;test&quot;,&quot;123456&quot;,[&quot;Tests\\Support\\Const...],&quot;Почта заполнена некорр...&quot; <span style="color: #34495e; font-size: 70%;">6.05s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer10">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd6c9d5c9', this)"><span class="toggle">+</span> Acceptance\AuthorizationCest: negative scenario cest <span style="color: #732E81">&quot;Tests\\Support\\AcceptanceTester&quot;,&quot;Codeception\\Example&quot;,&quot;Tests\\Support\\Constants\\LanguageType&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd6c9d5c9">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I am on page <span style="color: #732E81">&quot;/login&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see element <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,{&quot;type&quot;:&quot;password&quot;}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;test&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;test&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;123456&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;123456&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::button[text() = &#039;Войти&#039;] | //child::button[text() = &#039;Sign In&#039;]&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element <span style="color: #732E81">&quot;//p[text() = &quot;Invalid email&quot;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Email cannot be blank.&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Incorrect email / password&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Password cannot be blank.&quot;]&quot;</span></td>
+      </tr>
+
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('11', this)"><span class="toggle">+</span>
+          <span class="quiet">AuthorizationCest &raquo;</span> Negative authorization en | [&quot;Tests\\Support\\Co...],&quot;test@mail.ru&quot;,&quot;123456&quot;,[&quot;Tests\\Support\\Co...],&quot;Некорректная пара л...&quot; <span style="color: #34495e; font-size: 70%;">8.08s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer11">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd74f119e', this)"><span class="toggle">+</span> Acceptance\AuthorizationCest: negative scenario cest <span style="color: #732E81">&quot;Tests\\Support\\AcceptanceTester&quot;,&quot;Codeception\\Example&quot;,&quot;Tests\\Support\\Constants\\LanguageType&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd74f119e">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I am on page <span style="color: #732E81">&quot;/login&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see element <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,{&quot;type&quot;:&quot;password&quot;}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;test@mail.ru&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;test@mail.ru&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I fill field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;123456&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;123456&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::button[text() = &#039;Войти&#039;] | //child::button[text() = &#039;Sign In&#039;]&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element <span style="color: #732E81">&quot;//p[text() = &quot;Incorrect email / password&quot;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Email cannot be blank.&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Password cannot be blank.&quot;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I don&#039;t see element <span style="color: #732E81">&quot;//p[text() = &quot;Invalid email&quot;]&quot;</span></td>
+      </tr>
+
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('12', this)"><span class="toggle">+</span>
+          <span class="quiet">OpenRestorePasswordCest &raquo;</span> Open restore password ru <span style="color: #34495e; font-size: 70%;">6.98s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer12">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd7c33b6b', this)"><span class="toggle">+</span> Tests\Acceptance\OpenRestorePasswordCest: open restore password <span style="color: #732E81">&quot;Tests\\Support\\AcceptanceTester&quot;,&quot;Tests\\Support\\Constants\\LanguageType&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd7c33b6b">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I am on page <span style="color: #732E81">&quot;/login&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=ru_RU&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see element <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,{&quot;type&quot;:&quot;password&quot;}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::a[text() = &#039;Забыли пароль&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//div[text() = &#039;Password recovery&#039;] | //div[text() = &#039;Восстановление пароля&#039;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in current url <span style="color: #732E81">&quot;/site/restore-password&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('13', this)"><span class="toggle">+</span>
+          <span class="quiet">OpenRestorePasswordCest &raquo;</span> Open restore password en <span style="color: #34495e; font-size: 70%;">6s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer13">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd825bf7c', this)"><span class="toggle">+</span> Tests\Acceptance\OpenRestorePasswordCest: open restore password <span style="color: #732E81">&quot;Tests\\Support\\AcceptanceTester&quot;,&quot;Tests\\Support\\Constants\\LanguageType&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd825bf7c">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I am on page <span style="color: #732E81">&quot;/login&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//a[@href=&#039;/login?language=en_US&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-email&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in field <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,&quot;&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see element <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::input[@id=&#039;loginform-password&#039;]&quot;,{&quot;type&quot;:&quot;password&quot;}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I click <span style="color: #732E81">&quot;//form[@id=&#039;login-form&#039;]//child::a[text() = &#039;Забыли пароль&#039;]&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I wait for element visible <span style="color: #732E81">&quot;//div[text() = &#039;Password recovery&#039;] | //div[text() = &#039;Восстановление пароля&#039;]&quot;,5</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see in current url <span style="color: #732E81">&quot;/site/restore-password&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+<tr>
+ <td>
+     <h3>Tests.Api Tests</h3>
+ </td>
+</tr>   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('14', this)"><span class="toggle">+</span>
+          <span class="quiet">RegisterCest &raquo;</span> Успешная регистрация нового пользователя <span style="color: #34495e; font-size: 70%;">1.48s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer14">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd845882a', this)"><span class="toggle">+</span> I register <span style="color: #732E81">&quot;testUser_289169@mail.ru&quot;,&quot;test123&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd845882a">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Content-Type&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Accept&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I send post <span style="color: #732E81">&quot;/register&quot;,{&quot;username&quot;:&quot;testUser_289169@mail.ru&quot;,&quot;password&quot;:&quot;test123&quot;}</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd845a976', this)"><span class="toggle">+</span> I see successful registration</p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd845a976">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response code is <span style="color: #732E81">201</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response is json</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response contains json <span style="color: #732E81">{&quot;message&quot;:&quot;Регистрация успешна&quot;}</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('15', this)"><span class="toggle">+</span>
+          <span class="quiet">RegisterCest &raquo;</span> Ошибка при повторной регистрации с тем же email <span style="color: #34495e; font-size: 70%;">0.86s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer15">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd85572bd', this)"><span class="toggle">+</span> I register <span style="color: #732E81">&quot;duplicate_624576@mail.ru&quot;,&quot;test123&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd85572bd">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Content-Type&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Accept&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I send post <span style="color: #732E81">&quot;/register&quot;,{&quot;username&quot;:&quot;duplicate_624576@mail.ru&quot;,&quot;password&quot;:&quot;test123&quot;}</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd8559258', this)"><span class="toggle">+</span> I see successful registration</p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd8559258">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response code is <span style="color: #732E81">201</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response is json</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response contains json <span style="color: #732E81">{&quot;message&quot;:&quot;Регистрация успешна&quot;}</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd855b198', this)"><span class="toggle">+</span> I register <span style="color: #732E81">&quot;duplicate_624576@mail.ru&quot;,&quot;123test&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd855b198">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Content-Type&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Accept&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I send post <span style="color: #732E81">&quot;/register&quot;,{&quot;username&quot;:&quot;duplicate_624576@mail.ru&quot;,&quot;password&quot;:&quot;123test&quot;}</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd855d1ba', this)"><span class="toggle">+</span> I see validation error</p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd855d1ba">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response code is <span style="color: #732E81">400</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response is json</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response json matches json path <span style="color: #732E81">&quot;$.error&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('16', this)"><span class="toggle">+</span>
+          <span class="quiet">RegisterCest &raquo;</span> Register with invalid data | &quot;Пустой username&quot;,&quot;&quot;,&quot;secure_pass&quot; <span style="color: #34495e; font-size: 70%;">0.41s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer16">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd85d33ad', this)"><span class="toggle">+</span> I register <span style="color: #732E81">&quot;&quot;,&quot;secure_pass&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd85d33ad">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Content-Type&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Accept&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I send post <span style="color: #732E81">&quot;/register&quot;,{&quot;username&quot;:&quot;&quot;,&quot;password&quot;:&quot;secure_pass&quot;}</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd85d5315', this)"><span class="toggle">+</span> I see validation error</p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd85d5315">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response code is <span style="color: #732E81">400</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response is json</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response json matches json path <span style="color: #732E81">&quot;$.error&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('17', this)"><span class="toggle">+</span>
+          <span class="quiet">RegisterCest &raquo;</span> Register with invalid data | &quot;Пустой password&quot;,&quot;dmitriy@sheshnikov.ru&quot;,&quot;&quot; <span style="color: #34495e; font-size: 70%;">0.4s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer17">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd8656709', this)"><span class="toggle">+</span> I register <span style="color: #732E81">&quot;dmitriy@sheshnikov.ru&quot;,&quot;&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd8656709">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Content-Type&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Accept&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I send post <span style="color: #732E81">&quot;/register&quot;,{&quot;username&quot;:&quot;dmitriy@sheshnikov.ru&quot;,&quot;password&quot;:&quot;&quot;}</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd865885c', this)"><span class="toggle">+</span> I see validation error</p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd865885c">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response code is <span style="color: #732E81">400</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response is json</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response json matches json path <span style="color: #732E81">&quot;$.error&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('18', this)"><span class="toggle">+</span>
+          <span class="quiet">RegisterCest &raquo;</span> Register with invalid data | &quot;Пустые оба поля&quot;,&quot;&quot;,&quot;&quot; <span style="color: #34495e; font-size: 70%;">0.44s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer18">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd86d5df2', this)"><span class="toggle">+</span> I register <span style="color: #732E81">&quot;&quot;,&quot;&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd86d5df2">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Content-Type&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Accept&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I send post <span style="color: #732E81">&quot;/register&quot;,{&quot;username&quot;:&quot;&quot;,&quot;password&quot;:&quot;&quot;}</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd86d7f19', this)"><span class="toggle">+</span> I see validation error</p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd86d7f19">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response code is <span style="color: #732E81">400</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response is json</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response json matches json path <span style="color: #732E81">&quot;$.error&quot;</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('19', this)"><span class="toggle">+</span>
+          <span class="quiet">RegisterCest &raquo;</span> Регистрация и последующий вход с теми же данными <span style="color: #34495e; font-size: 70%;">0.72s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer19">
+
+
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd87b36a4', this)"><span class="toggle">+</span> I register <span style="color: #732E81">&quot;login_test_997551@mail.ru&quot;,&quot;test123&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd87b36a4">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Content-Type&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Accept&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I send post <span style="color: #732E81">&quot;/register&quot;,{&quot;username&quot;:&quot;login_test_997551@mail.ru&quot;,&quot;password&quot;:&quot;test123&quot;}</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd87b56f3', this)"><span class="toggle">+</span> I see successful registration</p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd87b56f3">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response code is <span style="color: #732E81">201</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response is json</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response contains json <span style="color: #732E81">{&quot;message&quot;:&quot;Регистрация успешна&quot;}</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd87b7a4c', this)"><span class="toggle">+</span> I login <span style="color: #732E81">&quot;login_test_997551@mail.ru&quot;,&quot;test123&quot;</span></p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd87b7a4c">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Content-Type&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I have http header <span style="color: #732E81">&quot;Accept&quot;,&quot;application/json&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I send post <span style="color: #732E81">&quot;/login&quot;,{&quot;username&quot;:&quot;login_test_997551@mail.ru&quot;,&quot;password&quot;:&quot;test123&quot;}</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+<tr>
+ <td class="stepName " ><p onclick="showHide('6aa7bd87b9b12', this)"><span class="toggle">+</span> I see auth token</p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer6aa7bd87b9b12">
+          <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response code is <span style="color: #732E81">200</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response is json</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response json matches json path <span style="color: #732E81">&quot;$.token&quot;</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">&nbsp;&nbsp;&nbsp;&nbsp;I see response matches json type <span style="color: #732E81">{&quot;token&quot;:&quot;string&quot;}</span></td>
+      </tr>
+
+
+  </table>
+ </td>
+</tr>
+
+         
+         
+         
+     </table>
+
+
+    </td>
+   </tr>
+
+
+<tr>
+ <td>
+     <h3>Tests.Functional Tests</h3>
+ </td>
+</tr><tr>
+ <td>
+     <h3>Tests.Unit Tests</h3>
+ </td>
+</tr>
+   <tr>
+    <td>
+	    <h2>Summary</h2>
+     <div id="stepContainerSummary">
+      <table border="0">
+       <tr>
+        <td width="250" class="scenarioSuccess">Successful scenarios:</td>
+        <td class="scenarioSuccessValue"><strong>19</strong></td>
+       </tr>
+       <tr>
+        <td class="scenarioFailed">Failed scenarios:</td>
+        <td class="scenarioFailedValue"><strong>0</strong></td>
+       </tr>
+       <tr>
+        <td class="scenarioSkipped">Skipped scenarios:</td>
+        <td class="scenarioSkippedValue"><strong>0</strong></td>
+       </tr>
+       <tr>
+        <td class="scenarioIncomplete">Incomplete scenarios:</td>
+        <td class="scenarioIncompleteValue"><strong>0</strong></td>
+       </tr>
+       <tr>
+        <td class="scenarioUseless">Useless scenarios:</td>
+        <td class="scenarioUselessValue"><strong>0</strong></td>
+       </tr>
+      </table>
+     </div>
+    </td>
+   </tr>
+  </table>
+ </div>
+ </body>
+</html>
