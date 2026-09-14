@@ -1,0 +1,10 @@
+actor: ApiTester
+suite_namespace: Tests\Api
+modules:
+    enabled:
+        - REST:
+            url: 'https://api.qasandbox.org/api'
+            depends: PhpBrowser
+            part: Json
+        - PhpBrowser:
+            url: 'https://api.qasandbox.org/api'
