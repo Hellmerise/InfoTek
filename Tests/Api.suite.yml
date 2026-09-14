@@ -3,8 +3,8 @@ suite_namespace: Tests\Api
 modules:
     enabled:
         - REST:
-            url: 'https://api.qasandbox.org/api'
+            url: %API_TEST_URL%
             depends: PhpBrowser
             part: Json
         - PhpBrowser:
-            url: 'https://api.qasandbox.org/api'
+            url: %API_TEST_URL%
