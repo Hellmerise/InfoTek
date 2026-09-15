@@ -19,6 +19,7 @@ services:
       - web
     privileged: true
     shm_size: 4g
+    command: ["sleep", "infinity"]
 
   chrome:
     image: selenium/standalone-chrome:latest
