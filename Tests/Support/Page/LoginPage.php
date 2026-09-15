@@ -25,6 +25,11 @@ final class LoginPage
         $this->acceptanceTester = $I;
     }
     
+    public function getXpathButtonLogin(): string
+    {
+        return self::BUTTON_LOGIN;
+    }
+    
     public function amOnPageRu(): void
     {
         ErrorMessages::setLanguage(LanguageType::Russian);

@@ -21,6 +21,11 @@ final class LoginSteps extends AcceptanceTester
         $this->restorePasswordPage = new RestorePasswordPage($I);
     }
     
+    public function getXpathButtonLogin(): string
+    {
+        return $this->loginPage->getXpathButtonLogin();
+    }
+    
     public function login(string $email, string $password, bool $isEng = false): void
     {
         $this->openEmptyLoginForm($isEng);
