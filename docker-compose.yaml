@@ -3,9 +3,9 @@ networks:
     external: true
 
 services:
-  selenium:
-    container_name: ${SELENIUM_CONTAINER_NAME}
-    hostname: selenium
+  php:
+    container_name: ${PHP_CONTAINER_NAME}
+    hostname: php
     build:
       context: .
       dockerfile: Docker/Php/Dockerfile

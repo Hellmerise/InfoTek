@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
+use Codeception\Attribute\Examples;
 use Codeception\Example;
 use Codeception\Scenario;
 use Tests\Support\ApiTester;
@@ -42,14 +43,22 @@ final class RegisterCest
         $this->seeRegistration($email, '123test', false);
     }
     
-    /**
-     * @dataProvider dataProvider
-     */
+    #[Examples(
+        email: '',
+        password: 'pass123456',
+    )]
+    #[Examples(
+        email: 'dmitriy@sheshnikov.ru',
+        password: '',
+    )]
+    #[Examples(
+        email: '',
+        password: '',
+    )]
     public function registerWithInvalidData(ApiTester $I, Example $example): void
     {
-        $I->wantTo($example['testName']);
-        
-        $this->seeRegistration($example['username'], $example['password'], false);
+        $I->wantTo('Ошибка регистрации с недопустимыми данными');;
+        $this->seeRegistration($example['email'], $example['password'], false);
     }
     
     private function seeRegistration(string $email, string $password, bool $isSuccess): void
@@ -61,10 +70,5 @@ final class RegisterCest
         } else {
             $this->registerSteps->seeValidationError();
         }
-    }
-
-    private function dataProvider(): array
-    {
-        return require dirname(__DIR__) . '/Support/Data/Api/RegisterData.php';
     }
 }
