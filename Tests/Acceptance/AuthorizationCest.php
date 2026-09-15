@@ -9,6 +9,7 @@ use Codeception\Example;
 use Codeception\Exception\TestRuntimeException;
 use Codeception\Scenario;
 use Facebook\WebDriver\Exception\TimeoutException;
+use InvalidArgumentException;
 use Tests\Support\AcceptanceTester;
 use Tests\Support\Constants\ErrorCheckType;
 use Tests\Support\Constants\ErrorMessages;
@@ -94,6 +95,7 @@ final class AuthorizationCest
             match ($checkType) {
                 ErrorCheckType::SEE      => $I->waitForElement($errorXpath, self::WAIT_TIMEOUT),
                 ErrorCheckType::DONT_SEE => $I->dontSeeElement($errorXpath),
+                default => throw new InvalidArgumentException("Неподдерживаемый тип проверки ошибки: {$checkType->value}"),
             };
         }
     }

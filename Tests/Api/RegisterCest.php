@@ -18,14 +18,18 @@ final class RegisterCest
         $this->registerSteps = new RegisterSteps($scenario);
     }
     
-    public function registerNewUser(ApiTester $I): void
+    public function registerAndLogin(ApiTester $I): void
     {
-        $I->wantTo('Успешная регистрация нового пользователя');
+        $I->wantTo('Регистрация и последующий вход с теми же данными');
         
-        $email = $this->registerSteps->generateUniqueEmail('testUser');
+        $email    = $this->registerSteps->generateUniqueEmail('login_test');
+        $password = 'test123';
         
-        $this->registerSteps->register($email, 'test123');
-        $this->registerSteps->seeSuccessfulRegistration();
+        $this->seeRegistration($email, $password, true);
+        
+        $this->registerSteps->login($email, $password);
+        
+        $this->registerSteps->seeAuthToken();
     }
     
     public function registerDuplicateUsername(ApiTester $I): void
@@ -34,11 +38,8 @@ final class RegisterCest
         
         $email = $this->registerSteps->generateUniqueEmail('duplicate');
         
-        $this->registerSteps->register($email, 'test123');
-        $this->registerSteps->seeSuccessfulRegistration();
-        
-        $this->registerSteps->register($email, '123test');
-        $this->registerSteps->seeValidationError();
+        $this->seeRegistration($email, 'test123', true);
+        $this->seeRegistration($email, '123test', false);
     }
     
     /**
@@ -48,22 +49,18 @@ final class RegisterCest
     {
         $I->wantTo($example['testName']);
         
-        $this->registerSteps->register($example['username'], $example['password']);
-        $this->registerSteps->seeValidationError();
+        $this->seeRegistration($example['username'], $example['password'], false);
     }
     
-    public function registerAndLogin(ApiTester $I): void
+    private function seeRegistration(string $email, string $password, bool $isSuccess): void
     {
-        $I->wantTo('Регистрация и последующий вход с теми же данными');
-        
-        $email    = $this->registerSteps->generateUniqueEmail('login_test');
-        $password = 'test123';
-        
         $this->registerSteps->register($email, $password);
-        $this->registerSteps->seeSuccessfulRegistration();
         
-        $this->registerSteps->login($email, $password);
-        $this->registerSteps->seeAuthToken();
+        if ($isSuccess) {
+            $this->registerSteps->seeSuccessfulRegistration();
+        } else {
+            $this->registerSteps->seeValidationError();
+        }
     }
 
     private function dataProvider(): array
