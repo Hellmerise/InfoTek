@@ -4,31 +4,34 @@ declare(strict_types=1);
 
 namespace Tests\Support\Step\Acceptance;
 
-use Codeception\Scenario;
+use InvalidArgumentException;
 use Tests\Support\AcceptanceTester;
+use Tests\Support\Constants\LanguageType;
 use Tests\Support\Page\LoginPage;
 use Tests\Support\Page\RestorePasswordPage;
 
-final class LoginSteps extends AcceptanceTester
+final class LoginSteps
 {
     private LoginPage $loginPage;
     private RestorePasswordPage $restorePasswordPage;
+    private LanguageType $defaultLanguage;
     
-    public function __construct(Scenario $scenario, AcceptanceTester $I)
+    public function __construct(AcceptanceTester $I)
     {
-        parent::__construct($scenario);
+        $this->defaultLanguage = LanguageType::fromEnvCode($_ENV['DEFAULT_LANGUAGE']);
+        
         $this->loginPage = new LoginPage($I);
         $this->restorePasswordPage = new RestorePasswordPage($I);
     }
     
-    public function getXpathButtonLogin(): string
+    public function waitForLoginButtonClickable(int $timeout): void
     {
-        return $this->loginPage->getXpathButtonLogin();
+        $this->loginPage->waitForLoginButtonClickable($timeout);
     }
     
-    public function login(string $email, string $password, bool $isEng = false): void
+    public function login(string $email, string $password, ?LanguageType $language = null): void
     {
-        $this->openEmptyLoginForm($isEng);
+        $this->openEmptyLoginForm($language);
         
         $this->loginPage->fillLogin($email);
         $this->loginPage->fillPassword($password);
@@ -36,22 +39,19 @@ final class LoginSteps extends AcceptanceTester
         $this->loginPage->clickLoginButton();
     }
     
-    public function openRestorePasswordForm(bool $isEng, int $timeout): void
+    public function openRestorePasswordForm(int $timeout, ?LanguageType $language = null): void
     {
-        $this->openEmptyLoginForm($isEng);
+        $this->openEmptyLoginForm($language);
         
         $this->loginPage->clickRestorePasswordButton();
         $this->restorePasswordPage->seeRestorePasswordPage($timeout);
     }
     
-    private function openEmptyLoginForm(bool $isEng): void
+    private function openEmptyLoginForm(?LanguageType $language = null): void
     {
-        if ($isEng) {
-            $this->loginPage->amOnPageEng();
-        } else {
-            $this->loginPage->amOnPageRu();
-        }
+        $language = $language ?? $this->defaultLanguage;
         
-        $this->loginPage->assertFormIsEmpty();
+        $this->loginPage->amOnPage($language);
+        $this->loginPage->assertFormIsEmptyAndPasswordIsMasked();
     }
 }

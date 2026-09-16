@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Tests\Support\Constants;
 
+use InvalidArgumentException;
+
 enum LanguageType: string
 {
-    case English = 'ENG';
-    case Russian = 'РУС';
+    case English = 'en_US';
+    case Russian = 'ru_RU';
+    
+    public static function fromEnvCode(string $code): self
+    {
+        return self::tryFrom($code)
+            ?? throw new InvalidArgumentException("Неподдерживаемый язык: {$code}");
+    }
     
     public function label(): string
     {
-        return match ($this) {
-            self::English => '[EN]',
-            self::Russian => '[RU]',
-        };
+        return "[{$this->value}]";
     }
 }
