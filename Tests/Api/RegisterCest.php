@@ -7,24 +7,28 @@ namespace Tests\Api;
 use Codeception\Attribute\Examples;
 use Codeception\Example;
 use Codeception\Scenario;
+use Faker\Factory;
+use Faker\Generator;
 use Tests\Support\ApiTester;
 use Tests\Support\Step\Api\RegisterSteps;
 
 final class RegisterCest
 {
     private RegisterSteps $registerSteps;
+    private Generator $faker;
     
     public function _before(Scenario $scenario): void
     {
         $this->registerSteps = new RegisterSteps($scenario);
+        $this->faker = Factory::create();
     }
     
     public function registerAndLogin(ApiTester $I): void
     {
         $I->wantTo('Регистрация и последующий вход с теми же данными');
         
-        $email    = $this->registerSteps->generateUniqueEmail('login_test');
-        $password = 'test123';
+        $email = $this->faker->email();
+        $password = $this->faker->password();
         
         $this->seeRegistration($email, $password, true);
         
@@ -37,10 +41,14 @@ final class RegisterCest
     {
         $I->wantTo('Ошибка при повторной регистрации с тем же email');
         
-        $email = $this->registerSteps->generateUniqueEmail('duplicate');
+        $email = $this->faker->email();
+        $password = $this->faker->password();
         
-        $this->seeRegistration($email, 'test123', true);
-        $this->seeRegistration($email, '123test', false);
+        $this->seeRegistration($email, $password, true);
+        
+        $password_new = $this->faker->password();
+        
+        $this->seeRegistration($email, $password_new, false);
     }
     
     #[Examples(
@@ -57,7 +65,8 @@ final class RegisterCest
     )]
     public function registerWithInvalidData(ApiTester $I, Example $example): void
     {
-        $I->wantTo('Ошибка регистрации с недопустимыми данными');;
+        $I->wantTo('Ошибка регистрации с недопустимыми данными');
+        
         $this->seeRegistration($example['email'], $example['password'], false);
     }
     
