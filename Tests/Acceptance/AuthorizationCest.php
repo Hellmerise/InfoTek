@@ -7,7 +7,6 @@ namespace Acceptance;
 use Codeception\Attribute\Group;
 use Codeception\Example;
 use Codeception\Exception\TestRuntimeException;
-use Codeception\Scenario;
 use Facebook\WebDriver\Exception\TimeoutException;
 use InvalidArgumentException;
 use Tests\Support\AcceptanceTester;

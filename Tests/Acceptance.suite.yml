@@ -7,6 +7,7 @@ actor: AcceptanceTester
 modules:
     enabled:
         - \Tests\Support\Helper\AuthorizationHelper
+        - Asserts
         - WebDriver:
             host: %CHROME_CONTAINER_NAME%
             url: %TEST_URL%

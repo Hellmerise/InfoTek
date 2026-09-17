@@ -11,6 +11,7 @@ use Tests\Support\Constants\LanguageType;
 final class LoginPage
 {
     private const string URL = "/login";
+    
     private const string LOGIN_FORM = "//form[@id='login-form']";
     private const string INPUT_LOGIN = self::LOGIN_FORM . "//child::input[@id='loginform-email']";
     private const string INPUT_PASSWORD = self::LOGIN_FORM . "//child::input[@id='loginform-password']";
@@ -19,6 +20,10 @@ final class LoginPage
     
     private const string LANGUAGE_RU = "//a[@href='/login?language=ru_RU']";
     private const string LANGUAGE_EN = "//a[@href='/login?language=en_US']";
+    
+    private const string FOOTER_RIGHT = "//div[contains(@class, 'footer__right')]";
+    private const string FOOTER_RIGHT_LINK = self::FOOTER_RIGHT . "//child::a[@href='https://www.autocrm.ru']";
+    
     private AcceptanceTester $acceptanceTester;
     
     public function __construct(AcceptanceTester $I)
@@ -70,6 +75,13 @@ final class LoginPage
     public function waitForLoginButtonClickable(int $timeout): void
     {
         $this->acceptanceTester->waitForElementClickable(self::BUTTON_LOGIN, $timeout);
+    }
+    
+    public function grabTextFromFooterRight(): string
+    {
+        $this->acceptanceTester->waitForElementVisible(self::FOOTER_RIGHT);
+        
+        return $this->acceptanceTester->grabTextFrom(self::FOOTER_RIGHT);
     }
     
     private function fillAndVerify(string $xpath, string $value): void
