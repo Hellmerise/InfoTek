@@ -13,25 +13,28 @@ final class OpenRestorePasswordCest
 {
     private const int WAIT_TIMEOUT = 5;
     private LoginSteps $loginSteps;
-    public function _before(Scenario $scenario, AcceptanceTester $I): void
+    
+    public function _before(AcceptanceTester $I): void
     {
-        $this->loginSteps = new LoginSteps($scenario, $I);
+        $this->loginSteps = new LoginSteps($I);
     }
     
     public function openRestorePasswordRu(AcceptanceTester $I): void
     {
-        $this->openRestorePassword($I, LanguageType::Russian);
+        $I->wantTo("[Ru] Открытие страницы восстановления пароля");
+        
+        $this->openRestorePassword(LanguageType::Russian);
     }
     
     public function openRestorePasswordEn(AcceptanceTester $I): void
     {
-        $this->openRestorePassword($I, LanguageType::English);
+        $I->wantTo("[Eng] Открытие страницы восстановления пароля");
+        
+        $this->openRestorePassword(LanguageType::English);
     }
     
-    private function openRestorePassword(AcceptanceTester $I, LanguageType $language): void
+    private function openRestorePassword(LanguageType $language): void
     {
-        $isEng = $language === LanguageType::English;
-        
-        $this->loginSteps->openRestorePasswordForm($isEng, self::WAIT_TIMEOUT);
+        $this->loginSteps->openRestorePasswordForm(self::WAIT_TIMEOUT, $language);
     }
 }

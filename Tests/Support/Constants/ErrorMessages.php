@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Support\Constants;
 
-use InvalidArgumentException;
 use RuntimeException;
 
 final class ErrorMessages
@@ -23,20 +22,10 @@ final class ErrorMessages
             ErrorType::INVALID_CREDENTIALS->value   => 'Incorrect email / password',
         ],
     ];
-    private static string $currentLanguage = LanguageType::Russian->value;
     
-    public static function setLanguage(LanguageType $language): void
+    public static function getErrorDescription(ErrorType $type, LanguageType $language): string
     {
-        if (!isset(self::TRANSLATIONS[$language->value])) {
-            throw new InvalidArgumentException("Язык '{$language->value}' не поддерживается");
-        }
-        
-        self::$currentLanguage = $language->value;
-    }
-    
-    public static function getErrorDescription(ErrorType $type): string
-    {
-        return self::TRANSLATIONS[self::$currentLanguage][$type->value]
-            ?? throw new RuntimeException("Перевод не найден для {$type->value} на языке " . self::$currentLanguage);
+        return self::TRANSLATIONS[$language->value][$type->value]
+            ?? throw new RuntimeException("Перевод не найден для {$type->value} на языке {$language->value}");
     }
 }

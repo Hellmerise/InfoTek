@@ -6,14 +6,6 @@ namespace Tests\Support\Constants;
 
 enum LanguageType: string
 {
-    case English = 'ENG';
-    case Russian = 'РУС';
-    
-    public function label(): string
-    {
-        return match ($this) {
-            self::English => '[EN]',
-            self::Russian => '[RU]',
-        };
-    }
+    case English = 'en_US';
+    case Russian = 'ru_RU';
 }

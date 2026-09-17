@@ -4,20 +4,26 @@ declare(strict_types=1);
 
 namespace Tests\Support\Page;
 
+use InvalidArgumentException;
 use Tests\Support\AcceptanceTester;
-use Tests\Support\Constants\ErrorMessages;
 use Tests\Support\Constants\LanguageType;
 
 final class LoginPage
 {
     private const string URL = "/login";
+    
     private const string LOGIN_FORM = "//form[@id='login-form']";
     private const string INPUT_LOGIN = self::LOGIN_FORM . "//child::input[@id='loginform-email']";
     private const string INPUT_PASSWORD = self::LOGIN_FORM . "//child::input[@id='loginform-password']";
     private const string BUTTON_LOGIN = self::LOGIN_FORM . "//child::button[text() = 'Войти'] | //child::button[text() = 'Sign In']";
     private const string LINK_RESTORE_ACCESS = self::LOGIN_FORM . "//child::a[text() = 'Забыли пароль']";
+    
     private const string LANGUAGE_RU = "//a[@href='/login?language=ru_RU']";
     private const string LANGUAGE_EN = "//a[@href='/login?language=en_US']";
+    
+    private const string FOOTER_RIGHT = "//div[contains(@class, 'footer__right')]";
+    private const string FOOTER_RIGHT_LINK = self::FOOTER_RIGHT . "//child::a[@href='https://www.autocrm.ru']";
+    
     private AcceptanceTester $acceptanceTester;
     
     public function __construct(AcceptanceTester $I)
@@ -25,23 +31,24 @@ final class LoginPage
         $this->acceptanceTester = $I;
     }
     
-    public function amOnPageRu(): void
+    public function getLoginButtonLocator(): string
     {
-        ErrorMessages::setLanguage(LanguageType::Russian);
-        $this->amOnPage();
+        return self::BUTTON_LOGIN;
     }
     
-    public function amOnPageEng(): void
+    public function amOnPage(LanguageType $language): void
     {
-        ErrorMessages::setLanguage(LanguageType::English);
-        $this->amOnPage(true);
+        $this->acceptanceTester->amOnPage(self::URL);
+        $this->acceptanceTester->waitForElementVisible(self::LOGIN_FORM);
+        
+        $languageLocator = $this->getLanguageLocator($language);
+        $this->acceptanceTester->click($languageLocator);
     }
     
-    public function assertFormIsEmpty(): void
+    public function assertFormIsEmptyAndPasswordIsMasked(): void
     {
         $this->acceptanceTester->seeInField(self::INPUT_LOGIN, '');
         $this->acceptanceTester->seeInField(self::INPUT_PASSWORD, '');
-        
         $this->assertPasswordIsMasked();
     }
     
@@ -65,16 +72,16 @@ final class LoginPage
         $this->acceptanceTester->click(self::LINK_RESTORE_ACCESS);
     }
     
-    private function amOnPage(bool $isEng = false): void
+    public function waitForLoginButtonClickable(int $timeout): void
     {
-        $this->acceptanceTester->amOnPage(self::URL);
-        $this->acceptanceTester->waitForElementVisible(self::LANGUAGE_EN);
+        $this->acceptanceTester->waitForElementClickable(self::BUTTON_LOGIN, $timeout);
+    }
+    
+    public function grabTextFromFooterRight(): string
+    {
+        $this->acceptanceTester->waitForElementVisible(self::FOOTER_RIGHT);
         
-        if ($isEng) {
-            $this->acceptanceTester->click(self::LANGUAGE_EN);
-        } else {
-            $this->acceptanceTester->click(self::LANGUAGE_RU);
-        }
+        return $this->acceptanceTester->grabTextFrom(self::FOOTER_RIGHT);
     }
     
     private function fillAndVerify(string $xpath, string $value): void
@@ -86,5 +93,14 @@ final class LoginPage
     private function assertPasswordIsMasked(): void
     {
         $this->acceptanceTester->seeElement(self::INPUT_PASSWORD, ['type' => 'password']);
+    }
+    
+    private function getLanguageLocator(LanguageType $language): string
+    {
+        return match ($language) {
+            LanguageType::Russian => self::LANGUAGE_RU,
+            LanguageType::English => self::LANGUAGE_EN,
+            default => throw new InvalidArgumentException("Не задан локатор для: {$language->value}"),
+        };
     }
 }

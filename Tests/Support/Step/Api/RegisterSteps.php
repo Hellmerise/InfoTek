@@ -52,14 +52,6 @@ class RegisterSteps extends ApiTester
         $this->seeResponseMatchesJsonType(['token' => 'string']);
     }
     
-    public function generateUniqueEmail(string $prefix = 'user'): string
-    {
-        $uniqueNumber = mt_rand (100000, 999999);
-        $domain       = 'mail.ru';
-        
-        return $prefix . '_' . $uniqueNumber . '@' . $domain;
-    }
-    
     private function haveJsonHeaders(): void
     {
         $this->haveHttpHeader('Content-Type', self::JSON_CONTENT_TYPE);
